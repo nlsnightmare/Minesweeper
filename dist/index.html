@@ -1,20 +1,21 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8"/>
-    <link href="style.css" rel="stylesheet"/>
-    <title>Document</title>
-  </head>
-  <body>
-    <canvas width="800" height="600" id="canvas"></canvas>
-    <div id="ui">
-      <button id="restart">Restart</button>
-      <input id="widthslider" type="range" min="5" max="25" value="10"/><span id="widthlabel">10</span>
-      <input id="heightslider" type="range" min="5" max="25" value="10"/><span id="heightlabel">10</span>
-      <input id="bombslider" type="range" min="5" max="100" value="10"/><span id="bomblabel">10</span>
+    <head>
+        <meta charset="UTF-8"/>
+        <link href="style.css" rel="stylesheet"/>
+        <title>Document</title>
+    </head>
+    <body>
+        <img id="spritesheet" src="./spritesheet.png" alt="" style="display:none;">
+        <canvas width="800" height="600" id="canvas"></canvas>
+        <div id="ui">
+            <button id="restart">Restart</button>
+            <input id="widthslider" type="range" min="5" max="25" value="10"/><span id="widthlabel">10</span>
+            <input id="heightslider" type="range" min="5" max="25" value="10"/><span id="heightlabel">10</span>
+            <input id="bombslider" type="range" min="5" max="100" value="10"/><span id="bomblabel">10</span>
 
-    </div>
+        </div>
 
-    <script src="bundle.js"></script>
-  </body>
+        <script src="bundle.js"></script>
+    </body>
 </html>
