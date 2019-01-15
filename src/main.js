@@ -19,14 +19,14 @@ let blocks;
 function getNeighbours(x,y) {
     let ret = [];
     for( let i = x-1; i < x + 2; i++){
-	for( let j = y-1; j < y + 2; j++){
-	    if (i < 0 || j < 0) {
-		continue;
-	    }
-	    let n_b = blocks[i + (j * WIDTH )];
-	    if (n_b === undefined || (x == i && y == j) || i == WIDTH || j == HEIGHT) continue;
-	    ret.push(n_b);
-	}
+        for( let j = y-1; j < y + 2; j++){
+            if (i < 0 || j < 0) {
+                continue;
+            }
+            let n_b = blocks[i + (j * WIDTH )];
+            if (n_b === undefined || (x == i && y == j) || i == WIDTH || j == HEIGHT) continue;
+            ret.push(n_b);
+        }
     }
     return ret;
 }
@@ -36,7 +36,7 @@ function setUpLevel(w,h,bombs) {
     marked = 0;
     revealed = 0;
     numBombs = bombs;
-    
+
     WIDTH = w;
     HEIGHT = h;
     blocks = [];
@@ -45,11 +45,11 @@ function setUpLevel(w,h,bombs) {
     b_height = ctx.height / HEIGHT;
 
     for (let j = 0; j < HEIGHT; j++) {
-	for (let i = 0; i < WIDTH; i++) {
-	    let x = i * b_width;
-	    let y = j * b_height;
-	    blocks.push(new Block(x, y, b_width, b_height, Math.random()));
-	}
+        for (let i = 0; i < WIDTH; i++) {
+            let x = i * b_width;
+            let y = j * b_height;
+            blocks.push(new Block(x, y, b_width, b_height, Math.random()));
+        }
     }
     setBombs(bombs);
     calculateNumbers();
@@ -65,14 +65,14 @@ window.onload = () => {
 
 function calculateNumbers() {
     for( let x = 0; x < WIDTH; x++){
-	for( let y = 0; y < HEIGHT; y++){
-	    let b = blocks[x + y * HEIGHT];
-	    if (b.isBomb) continue;
-	    let neighbours = getNeighbours(x,y);
-	    for (let n of neighbours) {
-		if (n.isBomb) b.numBombs++;
-	    }
-	}
+        for( let y = 0; y < HEIGHT; y++){
+            let b = blocks[x + y * HEIGHT];
+            if (b.isBomb) continue;
+            let neighbours = getNeighbours(x,y);
+            for (let n of neighbours) {
+                if (n.isBomb) b.numBombs++;
+            }
+        }
     }
 }
 
@@ -80,16 +80,16 @@ function calculateNumbers() {
 function setBombs(amount) {
     let max = WIDTH * HEIGHT;
     if (amount > WIDTH * HEIGHT) {
-	alert('Too many bombs! Setting them to ' + max / 2);
-	amount = max / 2;
+        alert('Too many bombs! Setting them to ' + max / 2);
+        amount = max / 2;
     }
     let idx;
     for( let i = 0; i < amount; i++){
-	idx = Math.floor(Math.random() * WIDTH * HEIGHT);
-	while (blocks[idx].isBomb) {
-	    idx = Math.floor(Math.random() * WIDTH * HEIGHT);
-	}
-	blocks[idx].setBomb();
+        idx = Math.floor(Math.random() * WIDTH * HEIGHT);
+        while (blocks[idx].isBomb) {
+            idx = Math.floor(Math.random() * WIDTH * HEIGHT);
+        }
+        blocks[idx].setBomb();
     }
 }
 
@@ -99,41 +99,42 @@ function draw() {
 
 
     for (let b of blocks) {
-	b.draw();
+        b.draw();
     }
     requestAnimationFrame(draw);
 }
 
 function CheckForBomb(block) {
     if (is_done) {
-	return;
+        return;
     }
     if (block.isMarked || block.isRevealed) {
-	return;
+        return;
     }
     if (block.check()) {
-	is_done = true;
-	blocks.forEach((b) => b.isRevealed = true);
-	alert('Game Over!');
-	return;
+        block.triggered = true;
+        is_done = true;
+        blocks.forEach((b) => b.isRevealed = true);
+        alert('Game Over!');
+        return;
     }
 
     revealed++;
     CheckForVictory();
     if (block.numBombs == 0) {
-	let x,y;
-	for (let i = 0; i < WIDTH; i++) {
-	    for (let j = 0; j < HEIGHT; j++) {
-		let b = blocks[i + j*WIDTH];
-		if (b.x == block.x && b.y == block.y) {
-		    x = i; y = j;
-		}
-	    }
-	}
-	let neighbours = getNeighbours(x,y);
-	for( let i = 0; i < neighbours.length; i++){
-	    CheckForBomb(neighbours[i]);
-	}
+        let x,y;
+        for (let i = 0; i < WIDTH; i++) {
+            for (let j = 0; j < HEIGHT; j++) {
+                let b = blocks[i + j*WIDTH];
+                if (b.x == block.x && b.y == block.y) {
+                    x = i; y = j;
+                }
+            }
+        }
+        let neighbours = getNeighbours(x,y);
+        for( let i = 0; i < neighbours.length; i++){
+            CheckForBomb(neighbours[i]);
+        }
     }
 }
 
@@ -150,27 +151,27 @@ canvas.onmousedown = (e) => {
     let selected = blocks[x + y*WIDTH];
 
     switch(e.which){
-    case 1:
-	CheckForBomb(selected);
-	break;
-    case 2:
-	if (!selected.isRevealed)
-	    return;
-	getNeighbours(x,y).forEach(CheckForBomb);
-	break;
-    case 3:
-	if(selected.mark())
-	    marked++;
-	else
-	    marked--;
-	CheckForVictory();
-	break;
+        case 1:
+            CheckForBomb(selected);
+            break;
+        case 2:
+            if (!selected.isRevealed)
+                return;
+            getNeighbours(x,y).forEach(CheckForBomb);
+            break;
+        case 3:
+            if(selected.mark())
+                marked++;
+            else
+                marked--;
+            CheckForVictory();
+            break;
     }
 
 };
 
 function CheckForVictory() {
     if (marked == numBombs && revealed == WIDTH * HEIGHT - numBombs) {
-	alert('You win!');
+        alert('You win!');
     }
 }
